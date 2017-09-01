@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Client Node - Roboy 2.0 - Inverse Kinematics</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Client Node";
+    var mkdocs_page_input_path = "client.md";
+    var mkdocs_page_url = "/client/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Roboy 2.0 - Inverse Kinematics</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Inverse Kinematics</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">CASPR / CASPROS</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../caspr_os/">Basics</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../caspr_inst/">Installation</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../caspr_model/">Model Creation</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../ros_moveit/">ROS MoveIt!</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Implementation</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../ik_system/">Setup and Architecture</a>
+                </li>
+                <li class=" current">
+                    
+    <span class="caption-text">Service</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../server/">Server Node</a>
+                </li>
+                <li class="toctree-l3 current">
+                    
+    <a class="current" href="./">Client Node</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l4"><a href="#main">Main</a></li>
+    
+
+    </ul>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../publisher/">Publisher Node</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../subscriber/">Subscriber Node</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../experimental/">Experimental</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../pysdf/">Robot Models</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../issues/">IK Solver</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Roboy 2.0 - Inverse Kinematics</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Implementation &raquo;</li>
+        
+      
+        
+          <li>Service &raquo;</li>
+        
+      
+    
+    <li>Client Node</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><strong>Source:</strong> The client code can be found <a href="https://github.com/poeffie/roboy_ik/tree/master/src">here</a></p>
+<h2 id="main">Main</h2>
+<p>The client has almost no modifications to a standard client, apart from saving the pose coordinates as floats with the function <code>atof()</code>. Further explanations can be found on the <a href="http://wiki.ros.org/ROS/Tutorials/WritingServiceClient%28c%2B%2B%29">official ROS Service tutorial</a></p>
+<pre><code>int main(int argc, char **argv)
+{
+  ros::init(argc, argv, &quot;roboy_ik_client&quot;);
+
+  if (argc != 4)
+  {
+    ROS_INFO(&quot;usage: send position X Y Z&quot;);
+    return 1;
+  }
+  ros::NodeHandle n;
+
+  ros::ServiceClient client = n.serviceClient&lt;roboy_ik::InverseKinematics&gt;(&quot;roboy_ik&quot;);
+  roboy_ik::InverseKinematics srv;
+  srv.request.a = atof(argv[1]);
+  srv.request.b = atof(argv[2]);
+  srv.request.c = atof(argv[3]);
+  if (client.call(srv))
+  {
+    ROS_INFO(&quot;Inverse Kinematics Success: %s&quot;, (int)srv.response.sum ? &quot;true&quot; : &quot;false&quot;);
+  }
+  else
+  {
+    ROS_ERROR(&quot;Failed to call inverse kinematics&quot;);
+    return 1;
+  }
+
+  return 0;
+}
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../publisher/" class="btn btn-neutral float-right" title="Publisher Node">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../server/" class="btn btn-neutral" title="Server Node"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../server/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../publisher/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+
+</body>
+</html>

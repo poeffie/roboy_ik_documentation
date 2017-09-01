@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Model Creation - Roboy 2.0 - Inverse Kinematics</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Model Creation";
+    var mkdocs_page_input_path = "caspr_model.md";
+    var mkdocs_page_url = "/caspr_model/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Roboy 2.0 - Inverse Kinematics</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Inverse Kinematics</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">CASPR / CASPROS</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../caspr_os/">Basics</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../caspr_inst/">Installation</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Model Creation</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#model-creation-tutorial">Model Creation - Tutorial</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#body">Body</a></li>
+        
+            <li><a class="toctree-l4" href="#trajectory">Trajectory</a></li>
+        
+            <li><a class="toctree-l4" href="#cables">Cables</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#integrating-the-model">Integrating the model</a></li>
+    
+
+    <li class="toctree-l3"><a href="#pabilegs-example">PaBiLegs Example</a></li>
+    
+
+    </ul>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../ros_moveit/">ROS MoveIt!</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Implementation</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../ik_system/">Setup and Architecture</a>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Service</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../server/">Server Node</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../client/">Client Node</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../publisher/">Publisher Node</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../subscriber/">Subscriber Node</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../experimental/">Experimental</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../pysdf/">Robot Models</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../issues/">IK Solver</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Roboy 2.0 - Inverse Kinematics</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>CASPR / CASPROS &raquo;</li>
+        
+      
+    
+    <li>Model Creation</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="model-creation-tutorial">Model Creation - Tutorial</h1>
+<p>In the following, I am going to describe how to create a CASPR model manually, without using the GUI. This is helpful to understand the principles of CASPR models and for CASPROS model creation, as CASPROS uses the same files like CASPR.</p>
+<p>1.) In your CASPR-master folder go to /data/model_config</p>
+<p>2.) Create a new Folder,  e.g. "myModel"</p>
+<p>3.) Create three .xml files, where "myModel" can be replaced by the model name, that you wish. </p>
+<ul>
+<li>myModel_bodies.xml</li>
+<li>myModel_cables.xml</li>
+<li>myModel_trajectories.xml</li>
+</ul>
+<h2 id="body">Body</h2>
+<p>4.) Edit myModel_bodies.xml first. The most Basic Model looks like this:</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;links display_range=&quot;-1.0 1.0 -1.0 1.0 -1.0 1.0&quot; view_angle=&quot;-37 32&quot;&gt;
+  &lt;link_rigid num=&quot;1&quot; name=&quot;Upper Arm&quot;&gt;
+    &lt;joint type=&quot;S_EULER_XYZ&quot; q_initial=&quot;0 0 0&quot;/&gt;
+    &lt;physical&gt;
+      &lt;mass&gt;1.0&lt;/mass&gt;
+      &lt;com_location&gt;0.0 0.25 0.0&lt;/com_location&gt;
+      &lt;end_location&gt;0.0 0.5 0.0&lt;/end_location&gt;
+      &lt;inertia ref=&quot;com&quot;&gt;
+         &lt;Ixx&gt;0.1&lt;/Ixx&gt;
+         &lt;Iyy&gt;0.1&lt;/Iyy&gt;
+         &lt;Izz&gt;0.1&lt;/Izz&gt;
+         &lt;Ixy&gt;0.1&lt;/Ixy&gt;
+         &lt;Ixz&gt;0.1&lt;/Ixz&gt;
+         &lt;Iyz&gt;0.1&lt;/Iyz&gt;
+      &lt;/inertia&gt;
+    &lt;/physical&gt;
+    &lt;parent&gt;
+      &lt;num&gt;0&lt;/num&gt;
+      &lt;location&gt;0.0 0.0 0.0&lt;/location&gt;
+    &lt;/parent&gt;
+  &lt;/link_rigid&gt;
+&lt;/links&gt;
+</code></pre>
+
+<p>The name of the body can be set by the attribute <em>name="NAME"</em> in the <code>&lt;link_rigid&gt;&lt;/link_rigid&gt;</code> element.
+In general, this code will create a link with its starting postion in <code>&lt;location&gt;&lt;/loaction&gt;</code> element, here also the coordinate origin.
+<code>&lt;com_location&gt;&lt;/com_loaction&gt;</code> describes the center of mass location in x-y-z coordinates.
+<code>&lt;end_location&gt;&lt;/end_location&gt;</code> describes the end location of the link.
+<code>&lt;joint_type&gt;&lt;/joint_type&gt;</code> describes the rotation axis of the body.</p>
+<p><strong>NOTE:</strong> In this basic example, as well as the following ones, the mass, inertia mass as well as locations are set to arbitrary values. for example here it is mass 1.0 and 0.1 for each inertia mass element. 
+Furthermore, the link always rotates around the point of its starting position. These are the possible rotational settings:</p>
+<pre><code>R_X % Revolute in X
+R_Y % Revolute in Y
+R_Z % Revolute in Z
+U_XY % Universal with xy-euler
+U_YZ % Universal with yz-euler %%
+P_XY % Translational joint in XY plane
+PLANAR_XY % Planar in XY plane
+PLANAR_YZ % Planar in YZ plane
+PLANAR_XZ % Planar in XZ plane %%
+S_EULER_XYZ % Spherical xyz-euler
+S_FIXED_XYZ % Spherical xyz-fixed
+S_QUATERNION % Spherical joint using quaternion
+T_XYZ % Translational joint XYZ
+SPATIAL_QUATERNION % T_XYZ + SPHERICAL
+SPATIAL_EULER_XYZ % T_XYZ + S_EULER_XYZ
+</code></pre>
+
+<p>Inerta matrix and mass will be set depending on the measurements of the robot link, that should be simulated.
+last but not least is the link number, which is important for attaching cables.
+It is written in the <code>&lt;num&gt;&lt;/num&gt;</code> element.</p>
+<h2 id="trajectory">Trajectory</h2>
+<p>6.) Edit the myModel_trajectorys.xml. The basic trajectory with two joint waypoints could look like this:</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;!DOCTYPE trajectories [
+&lt;!ATTLIST linear_spline_trajectory id ID #REQUIRED&gt;
+&lt;!ATTLIST cubic_spline_trajectory id ID #REQUIRED&gt;
+&lt;!ATTLIST quintic_spline_trajectory id ID #REQUIRED&gt;
+]&gt;
+&lt;trajectories&gt;
+  &lt;quintic_spline_trajectory id=&quot;traj_test&quot; time_definition=&quot;absolute&quot; time_step=&quot;0.00667&quot;&gt;
+    &lt;points&gt;
+      &lt;point&gt;
+        &lt;q&gt;0.0&lt;/q&gt;
+        &lt;q_dot&gt;0.0&lt;/q_dot&gt;
+        &lt;q_ddot&gt;0.0&lt;/q_ddot&gt;
+      &lt;/point&gt;
+      &lt;point time=&quot;1&quot;&gt;
+        &lt;q&gt;0.3&lt;/q&gt;
+        &lt;q_dot&gt;0.0&lt;/q_dot&gt;
+        &lt;q_ddot&gt;0.0&lt;/q_ddot&gt;
+      &lt;/point&gt;
+    &lt;/points&gt;
+  &lt;/quintic_spline_trajectory&gt;
+&lt;/trajectories&gt;
+</code></pre>
+
+<p>In this case the robot has one planar joint, that moves from 0 degree to 0.3 rad after one second. If the robot has more degrees of freedom, due to more or more complex joints, like spherical ones, one will have to add more q values.
+The q values are always just seperated by a blank space.
+The name of the trajectory can be set by the element attribute <em>id="NAME"</em>.
+Example:</p>
+<pre><code>&lt;q&gt;0.0 0.0 0.0&lt;/q&gt;
+&lt;q_dot&gt;0.0 0.0 0.0&lt;/q_dot&gt;
+&lt;q_ddot&gt;0.0 0.0 0.0&lt;/q_ddot&gt;
+</code></pre>
+
+<h2 id="cables">Cables</h2>
+<p>7.) Edit the myModel_cables.xml. For one cable, this file could look like the following:</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;!DOCTYPE cables [
+&lt;!ATTLIST cable_set id ID #REQUIRED&gt;
+]&gt;
+&lt;cables default_cable_set=&quot;CS1&quot;&gt;
+  &lt;cable_set id=&quot;CS1&quot;&gt;
+    &lt;cable_ideal name=&quot;cable 1&quot; attachment_reference=&quot;com&quot;&gt;
+      &lt;properties&gt;
+        &lt;force_min&gt;5&lt;/force_min&gt;
+        &lt;force_max&gt;35&lt;/force_max&gt;
+      &lt;/properties&gt;
+      &lt;attachments&gt;
+        &lt;attachment&gt;
+          &lt;link&gt;0&lt;/link&gt;
+          &lt;location&gt;-0.106066 0.020 -0.106066&lt;/location&gt;
+        &lt;/attachment&gt;
+        &lt;attachment&gt;
+          &lt;link&gt;1&lt;/link&gt;
+          &lt;location&gt;-0.025 0.1180 0.0&lt;/location&gt;
+        &lt;/attachment&gt;
+      &lt;/attachments&gt;
+    &lt;/cable_ideal&gt;
+  &lt;/cable_set&gt;
+&lt;/cables&gt;
+</code></pre>
+
+<p>In general, the interesting part of a cable are the attachement points. One attaches a cable between two links. The links are described by their <code>&lt;num&gt;&lt;/num&gt;</code> value in the .xml file for the body.
+The name of the cable set in this case is "CS1".</p>
+<h1 id="integrating-the-model">Integrating the model</h1>
+<p>After creating the .xml files, one has to link the new model to CASPR.
+This is done by editing "models_list.csv" in directory <code>/data/model_config</code>.
+One simple adds another line. In our case, the line could be like this:
+<code>My Model,/MyModel/,myModel_bodies.xml,myModel_cables.xml,myModel_trajectories.xml,</code></p>
+<p>NOTE: The line is internally seperated by commas. The first element of the line is the name of our model, this is also the name, that will be displayed in CASPR. The second element is the path to the model files, followed by three elements, the .xml files for body, cables and trajectory.
+After saving all files, you are done and successfully created and integrated a new CASPR model!</p>
+<h1 id="pabilegs-example">PaBiLegs Example</h1>
+<p>As an example for a robot model I want to reference here my <a href="https://github.com/poeffie/roboy_ik_additional_files">PaBiLegs model</a>. The model can be used by creating a new folder in the <code>CASPR-master/data/model_config/models/</code> location, called <code>PaBiLegs</code>. After copying the three necessary .xml files, edit <code>models_list.csv</code> by adding this line:
+<code>PaBiLegs,/PaBiLegs/,PaBiLegs_bodies.xml,PaBiLegs_cables.xml,PaBiLegs_trajectories.xml,</code></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../ros_moveit/" class="btn btn-neutral float-right" title="ROS MoveIt!">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../caspr_inst/" class="btn btn-neutral" title="Installation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../caspr_inst/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../ros_moveit/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+
+</body>
+</html>

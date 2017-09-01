@@ -1,0 +1,19 @@
+site_name: Roboy 2.0 - Inverse Kinematics
+pages:
+    - 'Inverse Kinematics': index.md
+    - 'CASPR / CASPROS':
+        - 'Basics': caspr_os.md
+        - 'Installation': caspr_inst.md
+        - 'Model Creation': caspr_model.md
+    - 'ROS MoveIt!': ros_moveit.md
+    - 'Implementation': 
+        - 'Setup and Architecture': ik_system.md
+        - 'Service': 
+                - 'Server Node': server.md
+                - 'Client Node': client.md
+        - 'Publisher Node': publisher.md
+        - 'Subscriber Node': subscriber.md
+        - 'Experimental': experimental.md
+    - 'Robot Models': pysdf.md
+    - 'IK Solver': issues.md
+theme: readthedocs

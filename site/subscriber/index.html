@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Subscriber Node - Roboy 2.0 - Inverse Kinematics</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Subscriber Node";
+    var mkdocs_page_input_path = "subscriber.md";
+    var mkdocs_page_url = "/subscriber/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Roboy 2.0 - Inverse Kinematics</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Inverse Kinematics</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">CASPR / CASPROS</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../caspr_os/">Basics</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../caspr_inst/">Installation</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../caspr_model/">Model Creation</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../ros_moveit/">ROS MoveIt!</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Implementation</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../ik_system/">Setup and Architecture</a>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Service</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../server/">Server Node</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../client/">Client Node</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../publisher/">Publisher Node</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Subscriber Node</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#main">Main</a></li>
+    
+
+    <li class="toctree-l3"><a href="#callback">Callback</a></li>
+    
+
+    <li class="toctree-l3"><a href="#creating-xml">Creating XML</a></li>
+    
+
+    <li class="toctree-l3"><a href="#get-joint-string">Get Joint String</a></li>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../experimental/">Experimental</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../pysdf/">Robot Models</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../issues/">IK Solver</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Roboy 2.0 - Inverse Kinematics</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Implementation &raquo;</li>
+        
+      
+    
+    <li>Subscriber Node</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><strong>Source:</strong> The subscriber code can be found <a href="https://github.com/poeffie/roboy_ik/tree/master/src">here</a></p>
+<p><strong>Note:</strong> There have to be done some fixes marked with TODO, as the code, like it is presented here, was optimized for the PaBiLegs model on CASPR. The model there uses 6 joints for visualizing the geometry of the legs better. But actually it only needs two links and two joints, as our planning group for PaBiLegs Ik and therefore the trajectory output only outputs two joint values per waypoint. So I made some modifications. These can be undone easily or one can use the universally applicable subscriber code, added in the roboy_ik package and named traj_sub_uni.cpp.</p>
+<h1 id="main">Main</h1>
+<p>We start with the main function. The main function is completely basic and subscribes to the topic <code>/move_group/display_planned_path</code>, that is published by the publisher node <code>motion</code>.</p>
+<pre><code>int main(int argc, char **argv)
+{
+  ros::init(argc, argv, &quot;subscribe_trajectory&quot;);
+  ros::NodeHandle n;
+  ros::Subscriber traj_sub = n.subscribe(&quot;/move_group/display_planned_path&quot;, 1000, traj_sub_callback);
+  ros::spin();
+  return 0;
+}
+</code></pre>
+
+<h1 id="callback">Callback</h1>
+<p>As soon as message from the topic is sent out and recognized, the code jumps into the subscriber callback. Here we basically read out the trajectory values and store them into an 2D array. The array has a predefined size. <code>NUM_WAYPOINTS</code> is the number of waypoints, the trajectory consits of. This value varies, based on how much the new pose differs from the original one. This means that one has to read out the length of the trajectory to define the array size. Unfortunately this problem could not be solved yet, so that it is still subjet of implementation.</p>
+<pre><code>void traj_sub_callback(const moveit_msgs::DisplayTrajectory::ConstPtr&amp; msg)
+{
+    const trajectory_msgs::JointTrajectory traj = msg-&gt;trajectory[0].joint_trajectory;
+    // TODO: Get length of trajectoy / number of waypoints and replace NUM_WAYPOINTS 
+    // with the resulting variable
+    double joint_traj_array[NUM_WAYPOINTS][NUM_JOINTS];
+    for (int i = 0; i &lt; NUM_WAYPOINTS; i++) {
+        for(int j = 0; j &lt; NUM_JOINTS; j++) {
+            // TODO: remove this, if all joints are used. This condition is for experimental
+            // purposes. Keep it, if just e.g. the first two will be used, as it is the case
+            // for the PaBiLegs demonstration
+            if (j &gt;= 2) {
+                joint_traj_array[i][j] = 0.0;
+            }
+            else {
+                joint_traj_array[i][j] = traj.points[i].positions[j];
+            }
+            ROS_INFO(&quot;Array value: [%f]&quot;, joint_traj_array[i][j]);
+        }
+        ROS_INFO(&quot; &quot;);
+    }
+    /**
+     * Call a function to write the trajectory values into a .xml file.
+     */
+    write_joint_trajectory_xml(joint_traj_array);
+
+}
+
+</code></pre>
+
+<h1 id="creating-xml">Creating XML</h1>
+<p>Writing the values from the array into an .xml file is done in this function. In general we use the opensource C++ plugin <em>tinyXML</em> here to generate our file. Instead of splitting up this comparably long function into multiple blocks, as it was done for the publisher node, we keep here the formatation and explain the functionality mainly inside of the code by some comments.</p>
+<pre><code>void write_joint_trajectory_xml (double q_array[NUM_WAYPOINTS][NUM_JOINTS]) {
+        int i = 0;
+
+        ROS_INFO(&quot;IN CALLBACk222!!!&quot;);
+        TiXmlDocument doc;
+
+        TiXmlElement * root = new TiXmlElement( &quot;trajectories&quot; );
+        doc.LinkEndChild( root );
+
+        TiXmlElement * cxn = new TiXmlElement( &quot;quintic_spline_trajectory&quot; );
+        root-&gt;LinkEndChild( cxn );
+        cxn-&gt;SetAttribute(&quot;id&quot;, &quot;traj_test2&quot;);
+        cxn-&gt;SetAttribute(&quot;time_definition&quot;, &quot;absolute&quot;);
+        cxn-&gt;SetAttribute(&quot;time_step&quot;, &quot;0.00667&quot;);
+
+        TiXmlElement * pts = new TiXmlElement( &quot;points&quot; );
+        cxn-&gt;LinkEndChild( pts );
+
+        TiXmlElement * point = new TiXmlElement( &quot;point&quot; );
+        pts-&gt;LinkEndChild( point );
+        /**
+         * In this state of development I have not yet implemented the conversion from array
+         * data to joint strings. This will be the next step. So far, I just set all the joint
+         * values to 0.
+         */
+        TiXmlElement * q = new TiXmlElement( &quot;q&quot; );
+        point-&gt;LinkEndChild( q );
+        TiXmlText * q_values = new TiXmlText( get_joint_string(q_array, i) );
+        q-&gt;LinkEndChild( q_values );
+
+        TiXmlElement * q_dot = new TiXmlElement( &quot;q_dot&quot; );
+        point-&gt;LinkEndChild( q_dot );
+        TiXmlText * q_dot_values = new TiXmlText( &quot;0.0 0.0 0.0 0.0 0.0 0.0&quot;  );
+        q_dot-&gt;LinkEndChild( q_dot_values );
+
+        TiXmlElement * q_ddot = new TiXmlElement( &quot;q_ddot&quot; );
+        point-&gt;LinkEndChild( q_ddot );
+        TiXmlText * q_ddot_values = new TiXmlText( &quot;0.0 0.0 0.0 0.0 0.0 0.0&quot;  );
+        q_ddot-&gt;LinkEndChild( q_ddot_values );
+        /**
+         * If the trajectory consits of more than one point, this loop will be called.
+         * The first point of a trajectory and the following ones differ by the point-attribute
+         * time, that is set here.
+         */
+        if (IS_TRAJECTORY == 1)
+        {
+                for (double i = 1; i &lt; NUM_WAYPOINTS; i++) {
+                        TiXmlElement * point = new TiXmlElement( &quot;point&quot; );
+                        pts-&gt;LinkEndChild( point );
+
+                        TiXmlElement * q = new TiXmlElement( &quot;q&quot; );
+                        point-&gt;LinkEndChild( q );
+                        point-&gt;SetAttribute(&quot;time&quot;, to_string(i/10));
+                        TiXmlText * q_values = new TiXmlText( get_joint_string(q_array, i)  );
+                        q-&gt;LinkEndChild( q_values );
+
+                        TiXmlElement * q_dot = new TiXmlElement( &quot;q_dot&quot; );
+                        point-&gt;LinkEndChild( q_dot );
+                        // TODO: replace &quot;0.0 0.0 0.0 0.0 0.0 0.0&quot; by get_joint_string(q_array, i)
+                        // if you want to have full functionalty. This is just for experimental
+                        // purposes, as the PaBiLegs CASPR model has 6 joints, instead of 2.
+                        TiXmlText * q_dot_values = new TiXmlText( &quot;0.0 0.0 0.0 0.0 0.0 0.0&quot;  );
+                        q_dot-&gt;LinkEndChild( q_dot_values );
+
+                        TiXmlElement * q_ddot = new TiXmlElement( &quot;q_ddot&quot; );
+                        point-&gt;LinkEndChild( q_ddot );
+                        // TODO: replace &quot;0.0 0.0 0.0 0.0 0.0 0.0&quot; by get_joint_string(q_array, i)
+                        // if you want to have full functionalty. This is just for experimental
+                        // purposes, as the PaBiLegs CASPR model has 6 joints, instead of 2.
+                        TiXmlText * q_ddot_values = new TiXmlText( &quot;0.0 0.0 0.0 0.0 0.0 0.0&quot;  );
+                        q_ddot-&gt;LinkEndChild( q_ddot_values );
+                }
+        }
+        /**
+         * tinyXML does not parse DOCTYPE elements. CASPR/OS needs a DOCTYPE declaration.
+         * The doctype declaration never changes for any trajectory, so I created an XML file, called
+         * head, containing the top of a trajectory XML file, that never changes.
+         * trajo.xml is the part of the trajectory that contains the individual joint angles
+         * we read from ROS MoveIt. Therefore it has to be generated seperately and combined
+         * afterwards with the head.xml
+         * trajo_combined.xml is the final usable trajectory file for CASPR / CASPROS
+         */
+
+        // TODO: change the file path for trajo.xml, head.xml, trajo_combined.xml as you wish.
+        doc.SaveFile( &quot;/home/offi/catkin_ws/src/roboy_ik/src/trajo.xml&quot; );
+        ifstream file1( &quot;/home/offi/catkin_ws/src/roboy_ik/src/head.xml&quot; ) ;
+        ifstream file2( &quot;/home/offi/catkin_ws/src/roboy_ik/src/trajo.xml&quot; ) ;
+        ofstream combined_file( &quot;/home/offi/catkin_ws/src/roboy_ik/src/trajo_combined.xml&quot; );
+        combined_file &lt;&lt; file1.rdbuf() &lt;&lt; file2.rdbuf();
+
+        ifstream  src(&quot;/home/offi/catkin_ws/src/roboy_ik/src/trajo_combined.xml&quot;, std::ios::binary);
+        // TODO: change the file path to the CASPR model accordingly
+        ofstream  dst(&quot;/home/offi/CASPR-master/data/model_config/models/PaBiLegs/PaBiLegs_trajectories.xml&quot;,   std::ios::binary);
+
+        dst &lt;&lt; src.rdbuf();
+        ROS_INFO(&quot;Trajectory successfully created!&quot;);
+}
+</code></pre>
+
+<h1 id="get-joint-string">Get Joint String</h1>
+<p>This function generates a joint string out of the array values, as it can be seen in the code above, where we have 6 joints and each joint has the value of zero: <code>"0.0 0.0 0.0 0.0 0.0 0.0"</code>. The values can, but do not absolutely need to be seperated by commas.</p>
+<pre><code>string get_joint_string(double q_array[NUM_WAYPOINTS][NUM_JOINTS], int wp){
+    stringstream stream;
+    for (int i = 0; i &lt; NUM_JOINTS; i++){
+        stream &lt;&lt; q_array[wp][i];
+        if (i != NUM_JOINTS-1) {
+            stream &lt;&lt; &quot;, &quot;;
+        }
+    }
+    return stream.str();
+}
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../experimental/" class="btn btn-neutral float-right" title="Experimental">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../publisher/" class="btn btn-neutral" title="Publisher Node"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../publisher/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../experimental/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+
+</body>
+</html>

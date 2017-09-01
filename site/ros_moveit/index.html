@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>ROS MoveIt! - Roboy 2.0 - Inverse Kinematics</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "ROS MoveIt!";
+    var mkdocs_page_input_path = "ros_moveit.md";
+    var mkdocs_page_url = "/ros_moveit/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Roboy 2.0 - Inverse Kinematics</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Inverse Kinematics</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">CASPR / CASPROS</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../caspr_os/">Basics</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../caspr_inst/">Installation</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../caspr_model/">Model Creation</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">ROS MoveIt!</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#basics">Basics</a></li>
+    
+
+    <li class="toctree-l2"><a href="#installation">Installation</a></li>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Implementation</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../ik_system/">Setup and Architecture</a>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Service</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../server/">Server Node</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../client/">Client Node</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../publisher/">Publisher Node</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../subscriber/">Subscriber Node</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../experimental/">Experimental</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../pysdf/">Robot Models</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../issues/">IK Solver</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Roboy 2.0 - Inverse Kinematics</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>ROS MoveIt!</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="basics">Basics</h1>
+<blockquote>
+<p>MoveIt! is state of the art software for mobile manipulation, incorporating the latest advances in motion planning, manipulation, 3D perception, kinematics, control and navigation. It provides an easy-to-use platform for developing advanced robotics applications, evaluating new robot designs and building integrated robotics products for industrial, commercial, R&amp;D and other domains.
+-- <cite><a href="http://moveit.ros.org/">http://moveit.ros.org/</a></p>
+</blockquote>
+<p>For our project we are using ROS MoveIt! to calculate the inverse kinematics for Roboy. More specifically we need a joint trajectory, that describes how joint angles change over time. This joint trajectoy will be fed into CASPR / CASPROS to simulate / output motor commands. Therefore it is necessary to make use of MoveIt!'s motion planning functionality.</p>
+<h1 id="installation">Installation</h1>
+<p>In the current implementation of the code, Ubuntu 16.04.3 LTS (Xenial Xerus) was used, which only works with ROS Kinetic. In this case, installation is done after the following steps (provided that ROS Kinetic is already installed):</p>
+<ol>
+<li><code>sudo apt-get install ros-kinetic-moveit</code></li>
+<li><code>source /opt/ros/kinetic/setup.bash</code></li>
+</ol>
+<p>For further information, go to the <a href="http://moveit.ros.org/install/">official MoveIt! installation website</a></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../ik_system/" class="btn btn-neutral float-right" title="Setup and Architecture">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../caspr_model/" class="btn btn-neutral" title="Model Creation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../caspr_model/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../ik_system/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+
+</body>
+</html>

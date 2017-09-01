@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Server Node - Roboy 2.0 - Inverse Kinematics</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Server Node";
+    var mkdocs_page_input_path = "server.md";
+    var mkdocs_page_url = "/server/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Roboy 2.0 - Inverse Kinematics</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Inverse Kinematics</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">CASPR / CASPROS</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../caspr_os/">Basics</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../caspr_inst/">Installation</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../caspr_model/">Model Creation</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../ros_moveit/">ROS MoveIt!</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Implementation</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../ik_system/">Setup and Architecture</a>
+                </li>
+                <li class=" current">
+                    
+    <span class="caption-text">Service</span>
+    <ul class="subnav">
+                <li class="toctree-l3 current">
+                    
+    <a class="current" href="./">Server Node</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l4"><a href="#server-implementation">Server Implementation</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l5" href="#main">Main</a></li>
+        
+            <li><a class="toctree-l5" href="#callback">Callback</a></li>
+        
+        </ul>
+    
+
+    </ul>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../client/">Client Node</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../publisher/">Publisher Node</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../subscriber/">Subscriber Node</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../experimental/">Experimental</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../pysdf/">Robot Models</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../issues/">IK Solver</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Roboy 2.0 - Inverse Kinematics</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Implementation &raquo;</li>
+        
+      
+        
+          <li>Service &raquo;</li>
+        
+      
+    
+    <li>Server Node</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="server-implementation">Server Implementation</h1>
+<p>In the following chapters, the code is described step by step, splitting it into compact blocks to improve readability. The heading will in general be left out, as it only contains <em>includes</em>, which does not need further explanations. We start here with the ROS server node, the initializing part for inverse kinematics calulations. The server works together with a so called client, which build together a ROS service.</p>
+<p><strong>Source:</strong> The server code can be found <a href="https://github.com/poeffie/roboy_ik/tree/master/src">here</a></p>
+<h2 id="main">Main</h2>
+<p><code>roboy_ik_server</code> is the name of the server node and <code>roboy_ik</code> the package name. We initialize a common server as it is taught on the <a href="http://wiki.ros.org/ROS/Tutorials/WritingServiceClient%28c%2B%2B%29">official ROS Service tutorial</a></p>
+<pre><code>int main(int argc, char **argv)
+{
+  ros::init(argc, argv, &quot;roboy_ik_server&quot;);
+  ros::NodeHandle n;
+
+  ros::ServiceServer service = n.advertiseService(&quot;roboy_ik&quot;, call_ik);
+  ROS_INFO(&quot;Ready to send position request.&quot;);
+  ros::spin();
+
+  return 0;
+}
+</code></pre>
+
+<h2 id="callback">Callback</h2>
+<p>The callback will be executed as soon as a request is detected.
+<code>InverseKinematics</code> is the name of the .srv file.
+In the first line we are checking a the sum of <code>req.a</code>, <code>req.b</code>, and <code>req.c</code>. These values are the x, y and z coordinates of the desired position, that is requested by the client. This statement is always true, as the position will for sure not overshoot this value. So basically this is still subject of implementation and should be replaced in the future by a reasonable Roboy state query, that provides Roboy not to execute inverse kinematics, if other subtasks are blocking.</p>
+<pre><code>bool call_ik(roboy_ik::InverseKinematics::Request  &amp;req,
+         roboy_ik::InverseKinematics::Response &amp;res)
+{
+//TODO: Find a reasonable state query to replace this if / else condition
+  if((req.a + req.b + req.c) &lt; 10000.0) {
+    res.sum = true;
+    ofstream pose_file;
+    pose_file.open (&quot;/home/offi/catkin_ws/src/roboy_ik/src/pose.txt&quot;);
+    pose_file &lt;&lt; std::fixed &lt;&lt; std::setprecision(5) &lt;&lt; req.a &lt;&lt;endl;
+    pose_file &lt;&lt; std::fixed &lt;&lt; std::setprecision(5) &lt;&lt; req.b &lt;&lt;endl;
+    pose_file &lt;&lt; std::fixed &lt;&lt; std::setprecision(5) &lt;&lt; req.c;
+    pose_file.close();
+  }
+  else {
+    res.sum = false;
+  }
+  ROS_INFO(&quot;request: x=%lf, y=%lf, z=%lf&quot;, (double)req.a, (double)req.b, (double)req.c);
+  ROS_INFO(&quot;sending back response: [%d]&quot;, (bool)res.sum);
+  if(res.sum == true) {
+    system(&quot;/home/offi/catkin_ws/src/roboy_ik/src/run.sh&quot;);
+  }
+
+  return true;
+}
+</code></pre>
+
+<p>If Roboy is allowed to execute the IK, what should basically be done is that the publisher node will receive this values and start calculating the inverse kinematics and finally, if successful, publish the joint trajectory. The upcomming problem here is that the Publisher Node can't be started from another node. It is not possible to define two nodes within one .cpp file, especially not a server and a publisher node.</p>
+<p>To call the publisher from a running node and also send a response to the client, which includes information wheather the IK calculations were successful, I came up with the following solution, that may be not optimal but sufficient for prototyping.</p>
+<p>First of all, the pose is stored locally in the file <code>pose.txt</code>. This is the connecting link to share information between service and publisher. Afterwards the system function calls <code>run.sh</code>, a .bash file that executes the publisher via .launch file. The code is the following:</p>
+<pre><code>#!/bin/bash  
+roslaunch roboy_ik motion_planning_api_tutorial.launch
+echo &quot;Successfully executed motion planning&quot;
+</code></pre>
+
+<p>As the publisher node has to terminate completely after finishing the calculations, one needs to edit the <code>&lt;node&gt;</code> tags in the <code>motion_planning_api.launch</code>, found in <code>/catkin_ws/src/roboy_ik/launch</code>, to contain required="true" and make respawn="false".</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../client/" class="btn btn-neutral float-right" title="Client Node">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../ik_system/" class="btn btn-neutral" title="Setup and Architecture"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../ik_system/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../client/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+
+</body>
+</html>

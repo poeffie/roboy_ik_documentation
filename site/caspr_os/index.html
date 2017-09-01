@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Basics - Roboy 2.0 - Inverse Kinematics</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Basics";
+    var mkdocs_page_input_path = "caspr_os.md";
+    var mkdocs_page_url = "/caspr_os/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Roboy 2.0 - Inverse Kinematics</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Inverse Kinematics</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">CASPR / CASPROS</span>
+    <ul class="subnav">
+                <li class=" current">
+                    
+    <a class="current" href="./">Basics</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#what-is-caspr">What is CASPR?</a></li>
+    
+
+    <li class="toctree-l3"><a href="#what-is-caspros">What is CASPROS?</a></li>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../caspr_inst/">Installation</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../caspr_model/">Model Creation</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../ros_moveit/">ROS MoveIt!</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Implementation</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../ik_system/">Setup and Architecture</a>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Service</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../server/">Server Node</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../client/">Client Node</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../publisher/">Publisher Node</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../subscriber/">Subscriber Node</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../experimental/">Experimental</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../pysdf/">Robot Models</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../issues/">IK Solver</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Roboy 2.0 - Inverse Kinematics</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>CASPR / CASPROS &raquo;</li>
+        
+      
+    
+    <li>Basics</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="what-is-caspr">What is CASPR?</h1>
+<p>CASPR is a opensource simulation tool, written in MatLab. It is developed for researching purposes in the area of tendon driven robots, so called CDPRs (Cable-driven parallel robots). Basically the simulation software is able to perform analysis in the following fields of study:</p>
+<ul>
+<li>Dynamics and Control</li>
+<li>Forward Dynamics</li>
+<li>Inverse Dynamics</li>
+<li>Motion Control</li>
+<li>Kinematics (Forward Kinematics, Inverse Kinematics)</li>
+<li>Workspace Analysis</li>
+<li>Design Optimisation</li>
+</ul>
+<p>CASPR provides a GUI, which allows easy and intuitive access to the to main functions.
+In general one starts by chosing a robotic model. These models are simplifications of the actual robots one is interested in. Robot models in CASPR are basically build with three different primitives</p>
+<ol>
+<li>Links</li>
+<li>Joints</li>
+<li>Cables</li>
+</ol>
+<p>where links and cables are straight lines with predefined start and end positions in space and joints provide the connection between the links. The image below depicts the CASPR GUI, where you can see a primitive robot model, a simple arm with just one joint. It is visualized in the 3D coordinate system. The black lines are the links, black circles the joints, blue circles center of masses and the red lines are the cables / tendons. The model position at the bottom of the picture shows the initial joint angle.</p>
+<p><img alt="Screenshot" src="../img/caspr.png" /></p>
+<p>CASPR models are always build of three .xml files. One file for the body description (links, joints, center of masses), one for the cables (attachment points) and another file describing a joint trajectory. How we build our own model will be described later.</p>
+<p>Is a robot model chosen, one can start the simulation. In our case this is inverse kinematics, that can be reached by clicking on <em>"Kinematics"</em> button, chose "Inverse Kinematics" in the <em>"Solver Information"</em> field and finally press the <em>"Run"</em> button. What CASPR now basically does is, that it sets the joint angles accordingly to the joint trajectory, that is described in the xml file. This makes the robot move its links and increase / decrease the cables, as these have a fixed starting point in space and a fixation on arbitrary locations of the robot's links. This means cables are stretching or tightening. The change in length is exactly what we need for our inverse kinematics, as we can use cable lengths to calculate motor commands.</p>
+<p>After a successfull simulation the CASPR GUI offers a varity of output calculations. You can plot a video, visualize the robot's movement or / and plot several outputs, like cable lengths, velocity, acceleration, etc. It is also possible to execute these calculations without the GUI by running a script. I will explain this in the PaBiLegs example below. The figure below shows for instance how such an cable length output could look like. in this case the link moved along the y axis to 90°, followed by -90° and finally back to the initial position of 0°.</p>
+<p><img alt="Screenshot" src="../img/cable_plot.png" /></p>
+<h1 id="what-is-caspros">What is CASPROS?</h1>
+<p>The difference between CASPR and CASPROS is basically that CASPROS works completely on C++ and is accessible by. it also does not provide a GUI and outputs not cable lengths, but motor commands to control real robots. So CASPROS is the linkage we need to control Roboy, while CASPR offers us a tool for simulation and research purposes, e.g. validating our robot models.</p>
+<p><strong>Sources:</strong></p>
+<p><a href="https://github.com/darwinlau/CASPR">Official CASPR repository</a></p>
+<p><a href="https://devanthro.atlassian.net/wiki/spaces/CO/pages/75191766/What+Kind+Of+Code+is+CASPR">Research - Control - What Kind Of Code is CASPR</a></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../caspr_inst/" class="btn btn-neutral float-right" title="Installation">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="Inverse Kinematics"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../caspr_inst/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+
+</body>
+</html>

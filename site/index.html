@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="None">
+  
+  <link rel="shortcut icon" href="./img/favicon.ico">
+  <title>Inverse Kinematics - Roboy 2.0 - Inverse Kinematics</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="./css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="./css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="./css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Inverse Kinematics";
+    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_url = "/";
+  </script>
+  
+  <script src="./js/jquery-2.1.1.min.js"></script>
+  <script src="./js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="./js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> Roboy 2.0 - Inverse Kinematics</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href=".">Inverse Kinematics</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#roboy-20-inverse-kinematics">Roboy 2.0 - Inverse Kinematics</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#goal">Goal</a></li>
+        
+            <li><a class="toctree-l3" href="#difficulties">Difficulties</a></li>
+        
+            <li><a class="toctree-l3" href="#approach">Approach</a></li>
+        
+            <li><a class="toctree-l3" href="#sources">Sources</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">CASPR / CASPROS</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="caspr_os/">Basics</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="caspr_inst/">Installation</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="caspr_model/">Model Creation</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="ros_moveit/">ROS MoveIt!</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Implementation</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="ik_system/">Setup and Architecture</a>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Service</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="server/">Server Node</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="client/">Client Node</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="publisher/">Publisher Node</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="subscriber/">Subscriber Node</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="experimental/">Experimental</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="pysdf/">Robot Models</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="issues/">IK Solver</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">Roboy 2.0 - Inverse Kinematics</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Inverse Kinematics</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="roboy-20-inverse-kinematics">Roboy 2.0 - Inverse Kinematics</h1>
+<p>For an advanced interaction of Roboy with the environment it is useful to move parts of the body to desired positions. Such body parts could be arms, legs, shoulder, head, etc. This would open up lots of new possibilities, like grabbing small objects with Roboy's hands, moving the legs (PaBiLegs) to desired positions or looking around.</p>
+<h2 id="goal">Goal</h2>
+<p>Roboy 2.0 should therefore have the possibility to be controlled in a way, that desired positions in space can be reached. This kind of control is called inverse kinematics (IK).
+Inverse kinematics in general means calculating joint angles of the robot for a given position in space.
+The opposite of IK is called forward kinematics, which describes computing the position in space by knowing about the values of the joint parameters.</p>
+<p><img src="img/ikfk.png" alt="Drawing" style="width: 500px;"/></p>
+<h2 id="difficulties">Difficulties</h2>
+<p>In contrast to forward kinematics, calculating the inverse kinematics is a difficult task. For a desired position in space there could be infinitely many solutions. As an example, we can think about pressing our hand on a flat table, but still having the possibility to move the ellbow in an angle range. The difficulty is therefore to find an appropriate solution. A further difficculty is, that some of the found solutions may be mathematically correct, but physically not executable. In general there are three ways to solve the IK, numerical, geometrical and algebraical methods. In order not to have to calculate these by hand, there are several tools and solvers freely usable, which we will discuss later. </p>
+<p>But apart from the so far called challenges, Roboy comes with an even increased complexity. Roboy is tendon driven. Instead of direct joint angles, the state of a body part is described by the lengths of the tendons. We therefore need to consider a calulation from joint angles to tendon lengths. This aspect led us overthink the conventional way of computing IK and search for an more appropriate solution.</p>
+<h2 id="approach">Approach</h2>
+<p>In the case of Roboy, the space is three dimensional (x, y, z) and the joint angles describe the motor states of Roboy's body parts. Considering the PaBiLegs the space is just two dimensional, which simplifies the task of calulating the joint angles and could theoretically be calculated manually by hand. But for a general solution for all kinds of body parts we are going to take a 3D IK solver in consideration.</p>
+<p>To make inverse kinematics possible, the approach is to do calculate the joint angles of the inverse kinematics with a solver software. For this we are using a common robot motion planning tool, called ROS MoveIt! The additional challenge due to the tendons can be tackled with a software tool called CASPR. In summary, CASPR allows us to simulate and output tendon lengths by a given joint trajectory. Combining these tools and making them accessable via ROS service is our approach for the Roboy 2.0 IK problem. Both tools will be described in detail in the following chapters.
+The figure belows depicts the system architecture. We will explain the difference between CASPR and CASPROS more preisely later in the next chapter.</p>
+<p><img alt="Screenshot" src="./img/approach.png" /></p>
+<h2 id="sources">Sources</h2>
+<p>A. D'Souza, S. Vijayakumar and S. Schaal, <em>"Learning inverse kinematics,"</em> Proceedings 2001 IEEE/RSJ International Conference on Intelligent Robots and Systems. Expanding the Societal Role of Robotics in the the Next Millennium (Cat. No.01CH37180), Maui, HI, 2001, pp. 298-303 vol.1.
+doi: 10.1109/IROS.2001.973374</p>
+<p><a href="http://wiki.roblox.com/index.php?title=Inverse_kinematics">http://wiki.roblox.com/index.php?title=Inverse_kinematics</a></p>
+<p><a href="http://www.diag.uniroma1.it/~deluca/rob1_en/10_InverseKinematics.pdf">http://www.diag.uniroma1.it/~deluca/rob1_en/10_InverseKinematics.pdf</a></p>
+<p><a href="https://appliedgo.net/roboticarm/">https://appliedgo.net/roboticarm/</a></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="caspr_os/" class="btn btn-neutral float-right" title="Basics">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+      
+        <span style="margin-left: 15px"><a href="caspr_os/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="./js/theme.js"></script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 0.16.3
+Build Date UTC : 2017-09-01 16:22:00
+-->
