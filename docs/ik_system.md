@@ -9,9 +9,9 @@ The code for inverse kinematics is written in a ROS package. This can be downloa
 
 Running this code requires furthermore
 
-1. [ROS MoveIt! installed](http://ik-test.readthedocs.io/en/latest/ros_moveit/#installation)
+1. [ROS MoveIt! installed](http://roboy-ik-doc.readthedocs.io/en/latest/ros_moveit/#installation)
 2. [ROS MoveIt! tutorial package installed](https://github.com/ros-planning/moveit_tutorials)
-3. [ROS MoveIt! IKFast tool installed](http://ik-test.readthedocs.io/en/latest/ikfast/#moveit-ikfast)
+3. [ROS MoveIt! IKFast tool installed](http://roboy-ik-doc.readthedocs.io/en/latest/ikfast/#moveit-ikfast)
 4. [PaBiLegs MoveIt! Config](https://github.com/poeffie/roboy_ik_additional_files/tree/master/pabi_legs_moveit_config) and corresponding [IKFast Plugin](https://github.com/poeffie/roboy_ik_additional_files/tree/master/pabi_legs_ikfast_leg_plugin) installed
 
 # System Architecture

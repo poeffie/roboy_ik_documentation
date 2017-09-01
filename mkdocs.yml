@@ -15,5 +15,5 @@ pages:
         - 'Subscriber Node': subscriber.md
         - 'Experimental': experimental.md
     - 'Robot Models': pysdf.md
-    - 'IK Solver': issues.md
+    - 'IK Solver': ikfast.md
 theme: readthedocs

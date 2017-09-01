@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>IK Solver - Roboy 2.0 - Inverse Kinematics</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "IK Solver";
+    var mkdocs_page_input_path = "ikfast.md";
+    var mkdocs_page_url = "/ikfast/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Roboy 2.0 - Inverse Kinematics</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Inverse Kinematics</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">CASPR / CASPROS</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../caspr_os/">Basics</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../caspr_inst/">Installation</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../caspr_model/">Model Creation</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../ros_moveit/">ROS MoveIt!</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Implementation</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../ik_system/">Setup and Architecture</a>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Service</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../server/">Server Node</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../client/">Client Node</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../publisher/">Publisher Node</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../subscriber/">Subscriber Node</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../experimental/">Experimental</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../pysdf/">Robot Models</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">IK Solver</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#limit-of-kdl-solver">Limit of KDL Solver</a></li>
+    
+
+    <li class="toctree-l2"><a href="#install-ikfast">Install IKFast</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#openrave-workstation">OpenRAVE Workstation</a></li>
+        
+            <li><a class="toctree-l3" href="#moveit-ikfast">MoveIt! IKFast</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l2"><a href="#create-ikfast-plugin">Create IKFast Plugin</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#use-ikfast">Use IKFast</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Roboy 2.0 - Inverse Kinematics</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>IK Solver</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="limit-of-kdl-solver">Limit of KDL Solver</h1>
+<p>The ROS MoveIt! KDL solver is only suitable for use with 6 or more DoF kinematic chains. This is an issue that normally would make IK on the PaBiLegs impossible, as this model only has 2 DoF.</p>
+<p>To overcome these limitations, MoveIt! allows to use another solver, the so called IKFast solver, which is capable of solving IK equations analytically of any kinematic chain. It even needs less time for the same problem as KDL. IKFast is provided by Rosen Diankov's <a href="http://openrave.org/docs/0.8.2/openravepy/ikfast/">OpenRAVE</a> (Open Robotics Automation Virtual Environment).</p>
+<h1 id="install-ikfast">Install IKFast</h1>
+<h2 id="openrave-workstation">OpenRAVE Workstation</h2>
+<p>OpenRave for Ubuntu 16.04 Xenial can be downloaded as a robotic workstation by following this <a href="https://fsuarez6.github.io/blog/workstation-setup-xenial/">tutorial</a>. Unfortunately many compiling errors occured during all of my attempts. Using the workstation with a graphical visualization by OpenSceneGraph, as it is described in the tutorial, may however not be necessary for this project, as ROS MoveIt! offers an own solution.</p>
+<h2 id="moveit-ikfast">MoveIt! IKFast</h2>
+<p>MoveIt! IKFast is the name of a MoveIt! tool that helps to generate a IKFast Plugin, that can replace solvers like the KDL solver. There are two ways to install this tool for ROS kinetic.</p>
+<p><strong>Binary Install</strong>:</p>
+<p><code>sudo apt-get install ros-kinetic-moveit-kinematics</code></p>
+<p><strong>Source</strong> (inside your catkin workspace):</p>
+<p><code>git clone https://github.com/ros-planning/moveit.git</code></p>
+<h1 id="create-ikfast-plugin">Create IKFast Plugin</h1>
+<p>Is MoveIt! IKFast successfully installed you can start generating your own IKFast solver plugin. In general there are some steps, that have to be done every time you do this for your robot model.
+First of all you need to clarify about these descriptions of your robot:</p>
+<ul>
+<li>robot name (<code>&lt;robotname&gt;</code>): This is the name of your robot, as it is clarified in your URDF.</li>
+<li>planning group name (<code>&lt;pl&gt;</code>): The planning group</li>
+<li>IKFast output path (<code>&lt;ikpath&gt;</code>): The path to the C++ file, that will be generated by IKFast and contain the analytical calculations to solve inverse kinematics.</li>
+<li>MoveIt! IKFast plugin package (<code>&lt;ikpkg&gt;</code>): The name of your final IKFast Plugin-</li>
+<li>MoveIt! robot config (<code>&lt;robot_config&gt;</code>): The name of the config package you created for your robot</li>
+</ul>
+<p><strong>IKFast Plugin Creation Step by Step:</strong></p>
+<p><strong>1.)</strong> Create a working robot URDF file, as described in the "Robot Models" chapter</p>
+<p><strong>2.)</strong> Load this URDF in the MoveIt! setup_assisant by running <code>roslaunch moveit_setup_assistant setup_assistant.launch</code></p>
+<p><strong>3.)</strong> (<em>OPTIONAL</em> - if you haven't done it before) Create a new working MoveiIt! Config plugin. Remember the name of planning group and in the last step <em>"Configuration files"</em> chose the folder of your workspace as output path. Now edit this path by adding <code>/&lt;robotname&gt;_moveit_config</code>. This will be the name of your config package. From now on, we will reference <code>&lt;robotname&gt;_moveit_config</code> as <code>&lt;robot_config&gt;</code>. Execute <code>catkin_make</code> to build the package.</p>
+<p><strong>4.)</strong> Navigate into the folder, where the URDF of your robot is saved. Open your terminal here and execute:</p>
+<pre><code>rosrun collada_urdf urdf_to_collada &lt;robotname&gt;.urdf &lt;robotname&gt;.dae
+</code></pre>
+
+<p>This will generate an .dae file out of the URDF</p>
+<p><strong>5.)</strong> (<em>OPTIONAL</em> - if there any floating point issues) Execute:</p>
+<pre><code>rosrun moveit_kinematics round_collada_numbers.py &lt;robotname&gt;.dae &lt;robotname&gt;_rounded.dae 5
+</code></pre>
+
+<p><strong>6.)</strong> Execute</p>
+<pre><code>openrave-robot.py &lt;robotname&gt;.dae --info links
+</code></pre>
+
+<p>This will list you the links of your robot model. We need the index of the links, that start and end your planning group. Remember them for the next step.</p>
+<p><strong>7.)</strong> Edit the command</p>
+<pre><code>python `openrave-config --python-dir`/openravepy/_openravepy_/ikfast.py --robot=&lt;robotname&gt;.dae --iktype=transform6d --baselink=1 --eelink=8 --savefile=&lt;ikpath&gt;
+</code></pre>
+
+<p>so that it fits your robot model.</p>
+<ul>
+<li><code>iktype</code> is the type of kinematic you can chose. A list with all possible tpyes is <a href="http://openrave.org/docs/latest_stable/openravepy/ikfast/#ik-types">here</a></li>
+<li><code>baselink</code> is the index of the starting link for your planning group</li>
+<li><code>eelink</code> is the end effector link of the planning group</li>
+<li><code>savefile</code> is the path to your IKFast C++ file. In general chose any path. Go there first and create an empty .cpp file. <em>IMPORTANT</em>: Give it the name of your planning group <code>&lt;pl&gt;</code>. Now your <code>&lt;ikpath&gt;</code> could look like this: <code>/home/offi/catkin_ws/src/roboy_ik/src/&lt;pl&gt;.cpp</code> It is important to also include the file into the path.</li>
+</ul>
+<p><strong>7.)</strong> Execute the command from bulletpoint 7.)</p>
+<p><strong>8.)</strong> Create the package, where the IKfast solver will be put in.</p>
+<pre><code>cd ~/catkin_ws/src
+catkin_create_pkg &lt;ikpkg&gt;
+</code></pre>
+
+<p><ikpkg> has to be named like this: <robotname><em>ikfast</em><pl>_plugin. Continue with:</p>
+<pre><code>cd ~/catkin_ws
+catkin_make
+</code></pre>
+
+<p><strong>9.)</strong> Execute</p>
+<pre><code>rosrun moveit_kinematics create_ikfast_moveit_plugin.py &lt;robotname&gt; &lt;pl&gt; &lt;ikpkg&gt; &lt;ikpath&gt;
+</code></pre>
+
+<p><strong>10.)</strong> Add the line <code>set(CMAKE_CXX_STANDARD 11)</code> to your <em>CMakeLists.txt</em> of the <code>&lt;ikpkg&gt;</code> package and finally build your workspace again to create the ik plugin:</p>
+<pre><code>cd ~/catkin_ws
+catkin_make
+</code></pre>
+
+<h2 id="use-ikfast">Use IKFast</h2>
+<p>If everything was successfully built, you can test the plugin. First, ensure that the plugin has been set as the default IK solver for your robot. Do this by running <code>rosed &lt;robotname&gt;_moveit_config/config/kinematics.yaml</code> or navigate manually to this file.</p>
+<p>Edit these parts, if not already done:</p>
+<pre><code>&lt;planning_group_name&gt;:
+  kinematics_solver: &lt;robotname&gt;_&lt;pl&gt;_kinematics/IKFastKinematicsPlugin
+-INSTEAD OF-
+  kinematics_solver: kdl_kinematics_plugin/KDLKinematicsPlugin
+</code></pre>
+
+<p>Now you can test your IK Plugin by running the Demo.launch of your <code>&lt;robot_config&gt;</code> package. Do this by executing <code>roslaunch &lt;robot_config&gt; demo_launch</code>. Move the endeffector with the markers or sample a random valid position. Check wheather the planning is successful.</p>
+<p><strong>Sources:</strong></p>
+<p>Facing any issues / compiling errors I can recommend reading the <a href="http://docs.ros.org/kinetic/api/moveit_tutorials/html/doc/ikfast_tutorial.html">official MoveIt! IKFast tutorial</a>, which includes more detailed information</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../pysdf/" class="btn btn-neutral" title="Robot Models"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../pysdf/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+
+</body>
+</html>
